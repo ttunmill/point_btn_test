@@ -1,0 +1,56 @@
+.point_wrap {
+    margin: 100px 0;
+    text-align: center;
+}
+.point_wrap .point_btn {
+    padding: 15px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #fff;
+    background-color: #7739ea;
+}
+.point_pop_bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.point_pop_bg .point_pop_container {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    width: 300px;
+    background-color: #fff;
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+}
+.point_pop_bg .point_pop_container .point_pop_close {
+    display: block;
+    font-size: 20px;
+    text-align: right;
+    cursor: pointer;
+}
+.point_pop_bg .point_pop_container .popup_contents {
+    display: grid;
+    height: 100%;
+}
+.point_pop_bg .point_pop_container p {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+.point_btn_wrap {
+    align-self: end;
+}
+.point_submit {
+    color: #fff;
+    padding: 10px 20px;
+    background-color: #7739ea;
+    border: none;
+    cursor: pointer;
+}
