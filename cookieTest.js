@@ -1,82 +1,73 @@
+// ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+// ▼▼강제 클릭 이벤트 막기▼▼
+// $('.point_btn').trigger('click');
+
 $(function() {
   toggleMainPopup();
 });
 
-$('.point_btn').on('click', function() {
-  let point = Math.floor(Math.random() * 101);
-  let popup = `<div class="point_pop_bg" name="point_popup"><div class="point_pop_container"><span class="point_pop_close"><i class="fa-solid fa-xmark"></i></span><div class="popup_contents"><p><span class="point_num"></span> 포인트 획득하셨습니다.</p><div class="point_btn_wrap"><button type="button" class="point_submit">확인</button></div></div></div></div>`;
-  
-  let point_box = chk_bg();
-  if(point_box) {
-      $(this).after(popup)
-      $('.point_num').text(point)
-  }
-  
-  function chk_bg() {
-      if($(document).find('.point_pop_bg').length == 0) {
-          return true
-      } else {
-          return false
-      }
-  }
-  
+$(document).on('click', '.point_pop_close, .point_submit', function() {
+  $(this).parents().find('.point_pop_bg').remove();
 });
 
-close_bg('.point_pop_close')
-close_bg('.point_submit')
-function close_bg(name) {
-  $(document).on('click', name, function() {
-      $(this).parents().find('.point_pop_bg').remove();
-  })
-  return true;
-}
-
-var toggleMainPopup = function() {
-
+let toggleMainPopup = function() {
+  
   /* 스토리지 제어 함수 정의 */
   var handleStorage = {
-    // 스토리지에 데이터 쓰기(이름, 만료일)
-  setStorage: function (name, exp) {
-      // 만료 시간 구하기(exp를 ms단위로 변경)
-      var date = new Date();
-      date = date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
-      // 로컬 스토리지에 저장하기
-      // (값을 따로 저장하지 않고 만료 시간을 저장)
-      localStorage.setItem(name, date)
-  },
-    // 스토리지 읽어오기
-  getStorage: function (name) {
-      var now = new Date();
-      now = now.setTime(now.getTime());
-      // 현재 시각과 스토리지에 저장된 시각을 각각 비교하여
-      // 시간이 남아 있으면 true, 아니면 false 리턴
-      return parseInt(localStorage.getItem(name)) > now
+      // 스토리지에 데이터 쓰기(이름, 만료일)
+      setStorage: function (name, exp) {
+          // 만료 시간 구하기(exp를 ms단위로 변경)
+          var date = new Date();
+          // date = date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
+          date = date.setTime(date.getTime() + 10000);
+          console.log(date)
+          // 로컬 스토리지에 저장하기
+          // (값을 따로 저장하지 않고 만료 시간을 저장)
+          localStorage.setItem(name, date)
+      },
+      // 스토리지 읽어오기
+      getStorage: function (name) {
+          var now = new Date();
+          now = now.setTime(now.getTime());
+          // 현재 시각과 스토리지에 저장된 시각을 각각 비교하여
+          // 시간이 남아 있으면 true, 아니면 false 리턴
+          
+          if(parseInt(localStorage.getItem(name)) < now) localStorage.removeItem(name);
+          return parseInt(localStorage.getItem(name)) > now
       }
-  };
-  
-  
-  // 쿠키 읽고 화면 보이게
-  if (handleStorage.getStorage("today")) {
-      $('.point_btn').off()
-      $('.point_btn').css('background-color', '#2944ff');
-      $('.point_btn').text('지급 완료');
   }
-  
-  $(".point_wrap").on("click", ".point_pop_close", function () {
-      handleStorage.setStorage("today", 1);
-      $(this).parents().find('.point_btn').css('background-color', '#2944ff');
-      $('.point_btn').text('지급 완료');
-      $('.point_btn').off()
-  });
+  return handleStorage;
+};
 
-  // 일반 버튼
-  $(".point_wrap").on("click", ".point_submit", function () {
-      handleStorage.setStorage("today", 1);
+let storage = toggleMainPopup();
+console.log(storage)
+
+if (storage.getStorage("Hello~~")) {
+  $('.point_btn').off()
+  $('.point_btn').css('background-color', '#2944ff');
+  $('.point_btn').text('지급 완료');
+}
+  
+$(".point_wrap").on("click", ".point_btn", function (e) {
+  if(!storage.getStorage("Hello~~")) {
+      //난수, 팝업창생성
+      let point = Math.floor(Math.random() * 101);
+      let popup = `<div class="point_pop_bg" name="point_popup"><div class="point_pop_container"><span class="point_pop_close"><i class="fa-regular fa-xmark"></i></span><div class="popup_contents"><p><span class="point_num"></span> 포인트 획득하셨습니다.</p><div class="point_btn_wrap"><button type="button" class="point_submit">확인</button></div></div></div></div>`;
+      
+      if ($(document).find('.point_pop_bg').length == 0) {
+          $(this).after(popup);
+          $('.point_num').text(point);
+      }
+
       $(this).parents().find('.point_btn').css('background-color', '#2944ff');
       $('.point_btn').text('지급 완료');
       $('.point_btn').off()
-  });
-}
+      storage.setStorage("Hello~~", 1);
+  } else {
+      e.preventDefault();
+      return false;
+  }
+})
 
 
 // var toggleMainPopup = function() {
